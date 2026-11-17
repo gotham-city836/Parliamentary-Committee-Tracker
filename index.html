@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parliamentary Dossier: Dr. Sudhanshu Trivedi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        zen: {
+                            950: '#09090b', /* Deepest background */
+                            900: '#18181b', /* Cards */
+                            800: '#27272a', /* Borders/Hover */
+                            700: '#3f3f46', /* Subtle text */
+                            400: '#a1a1aa', /* Body text */
+                            100: '#f4f4f5', /* Headings */
+                            accent: '#38bdf8', /* Sky blue accent */
+                            accentDim: 'rgba(56, 189, 248, 0.1)'
+                        }
+                    },
+                    borderRadius: {
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                        '4xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Zen-style sleek scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f46; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #52525b; 
+        }
+        
+        body {
+            background-color: #09090b;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(255,255,255,0.015) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(56,189,248,0.03) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .tab-content { display: none; opacity: 0; }
+        .tab-content.active { 
+            display: block; 
+            animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+        }
+        
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Glassmorphism utilities */
+        .glass-panel {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .glass-header {
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Custom selection */
+        ::selection {
+            background: rgba(56, 189, 248, 0.2);
+            color: #f4f4f5;
+        }
+
+        /* Interactivity Classes */
+        .tilt-card {
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        
+        .interactive-row {
+            cursor: pointer;
+        }
+        .interactive-row .expand-icon {
+            transition: transform 0.3s ease;
+        }
+        .interactive-row.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        .row-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .interactive-row.expanded + .row-details {
+            max-height: 200px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="text-zen-400 font-sans antialiased flex h-screen overflow-hidden selection:bg-zen-800">
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="mobile-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity" onclick="toggleSidebar()"></div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 m-4 rounded-3xl glass-panel text-zen-100 z-50 transform -translate-x-[120%] lg:translate-x-0 lg:static lg:block transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) flex flex-col shadow-2xl">
+        <div class="p-6 border-b border-white/5 flex items-center justify-between mt-2">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-zen-800 to-zen-900 border border-white/10 flex items-center justify-center shadow-inner">
+                    <i class="fa-solid fa-landmark text-zen-accent text-xs"></i>
+                </div>
+                <span class="text-sm font-semibold tracking-widest uppercase text-zen-100">Dossier Sys</span>
+            </div>
+            <button class="lg:hidden text-zen-400 hover:text-zen-100 transition-colors" onclick="toggleSidebar()">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+        
+        <div class="p-6 flex flex-col items-center border-b border-white/5">
+            <div class="relative group">
+                <div class="absolute inset-0 bg-zen-accent/20 rounded-full blur-md group-hover:blur-lg transition-all"></div>
+                <img src="https://placehold.co/120x120/18181b/f4f4f5?text=ST" alt="Dr. Sudhanshu Trivedi" class="relative w-20 h-20 rounded-full border border-white/10 shadow-xl mb-4 object-cover">
+            </div>
+            <h2 class="text-center font-medium text-zen-100 tracking-wide">Dr. Sudhanshu Trivedi</h2>
+            <div class="flex items-center mt-2 px-3 py-1 rounded-full bg-white/5 border border-white/5 text-xs text-zen-400">
+                <div class="w-1.5 h-1.5 rounded-full bg-orange-500 mr-2 shadow-[0_0_5px_rgba(249,115,22,0.5)]"></div>
+                BJP | Rajya Sabha
+            </div>
+        </div>
+
+        <nav class="flex-1 p-4 space-y-1.5 overflow-y-auto">
+            <a href="#overview" class="nav-link flex items-center px-4 py-3 rounded-2xl bg-white/10 text-zen-100 font-medium transition-all duration-300" onclick="showTab('overview', this)">
+                <i class="fa-solid fa-table-columns w-6 text-zen-accent"></i> 
+                <span class="text-sm">At a Glance</span>
+            </a>
+            <a href="#deep-dives" class="nav-link flex items-center px-4 py-3 rounded-2xl text-zen-400 hover:bg-white/5 hover:text-zen-100 font-medium transition-all duration-300" onclick="showTab('deep-dives', this)">
+                <i class="fa-solid fa-layer-group w-6"></i> 
+                <span class="text-sm">Committee Deep Dives</span>
+            </a>
+            <a href="#analysis" class="nav-link flex items-center px-4 py-3 rounded-2xl text-zen-400 hover:bg-white/5 hover:text-zen-100 font-medium transition-all duration-300" onclick="showTab('analysis', this)">
+                <i class="fa-solid fa-chart-network w-6"></i> 
+                <span class="text-sm">Strategic Analysis</span>
+            </a>
+            <a href="#past-service" class="nav-link flex items-center px-4 py-3 rounded-2xl text-zen-400 hover:bg-white/5 hover:text-zen-100 font-medium transition-all duration-300" onclick="showTab('past-service', this)">
+                <i class="fa-solid fa-clock-rotate-left w-6"></i> 
+                <span class="text-sm">Historical Context</span>
+            </a>
+            <a href="#schedule" class="nav-link flex items-center px-4 py-3 rounded-2xl text-zen-400 hover:bg-white/5 hover:text-zen-100 font-medium transition-all duration-300" onclick="showTab('schedule', this)">
+                <i class="fa-solid fa-calendar-days w-6"></i> 
+                <span class="text-sm">Meeting Schedule</span>
+            </a>
+        </nav>
+        
+        <div class="p-5 border-t border-white/5 text-[11px] text-zen-700 text-center uppercase tracking-widest">
+            Updated Nov 2026<br>Restricted Access
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <!-- Top Header -->
+        <header class="glass-header p-4 lg:px-8 lg:py-5 flex items-center justify-between z-30">
+            <div class="flex items-center">
+                <button class="lg:hidden text-zen-400 hover:text-zen-100 mr-4 transition-colors" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <h1 class="text-lg lg:text-xl font-medium text-zen-100 tracking-wide">Parliamentary Intelligence Dashboard</h1>
+            </div>
+            <div class="flex items-center space-x-3 text-xs font-medium text-zen-400 bg-zen-900 border border-white/5 px-4 py-2 rounded-full shadow-inner">
+                <i class="fa-regular fa-clock text-zen-700"></i>
+                <span class="hidden sm:inline tracking-wider">TERM: 2024 – 2030</span>
+            </div>
+        </header>
+
+        <!-- Scrollable Content Area -->
+        <div class="flex-1 overflow-y-auto p-4 lg:p-8 scroll-smooth">
+            
+            <!-- OVERVIEW TAB -->
+            <div id="overview" class="tab-content active max-w-6xl mx-auto">
+                <div class="mb-10 mt-4">
+                    <h2 class="text-3xl font-semibold text-zen-100 mb-3 tracking-tight">Active Deployments</h2>
+                    <p class="text-zen-400 text-sm max-w-2xl leading-relaxed">A high-level view of Dr. Trivedi's current parliamentary committee memberships, highlighting statutory bodies, standing committees, and chairmanship roles.</p>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10" style="perspective: 1000px;">
+                    <div class="tilt-card glass-panel p-6 rounded-3xl flex flex-col justify-between hover:border-zen-700 transition-colors cursor-crosshair">
+                        <div class="w-10 h-10 rounded-2xl bg-zen-800 border border-white/5 flex items-center justify-center text-zen-100 mb-4 shadow-inner pointer-events-none">
+                            <i class="fa-solid fa-gavel text-sm transform translate-z-10"></i>
+                        </div>
+                        <div class="transform translate-z-10 pointer-events-none">
+                            <p class="text-3xl font-light text-zen-100 stat-counter" data-target="1">0</p>
+                            <p class="text-xs text-zen-400 uppercase tracking-widest mt-1">Chairmanship</p>
+                        </div>
+                    </div>
+                    <div class="tilt-card glass-panel p-6 rounded-3xl flex flex-col justify-between hover:border-zen-700 transition-colors cursor-crosshair">
+                        <div class="w-10 h-10 rounded-2xl bg-zen-800 border border-white/5 flex items-center justify-center text-zen-100 mb-4 shadow-inner pointer-events-none">
+                            <i class="fa-solid fa-users-viewfinder text-sm"></i>
+                        </div>
+                        <div class="pointer-events-none">
+                            <p class="text-3xl font-light text-zen-100 stat-counter" data-target="2">0</p>
+                            <p class="text-xs text-zen-400 uppercase tracking-widest mt-1">Standing (DRSC)</p>
+                        </div>
+                    </div>
+                    <div class="tilt-card glass-panel p-6 rounded-3xl flex flex-col justify-between hover:border-zen-700 transition-colors cursor-crosshair">
+                        <div class="w-10 h-10 rounded-2xl bg-zen-800 border border-white/5 flex items-center justify-center text-zen-100 mb-4 shadow-inner pointer-events-none">
+                            <i class="fa-solid fa-file-invoice text-sm"></i>
+                        </div>
+                        <div class="pointer-events-none">
+                            <p class="text-3xl font-light text-zen-100 stat-counter" data-target="2">0</p>
+                            <p class="text-xs text-zen-400 uppercase tracking-widest mt-1">Financial / JPC</p>
+                        </div>
+                    </div>
+                    <div class="tilt-card glass-panel p-6 rounded-3xl flex flex-col justify-between hover:border-zen-700 transition-colors cursor-crosshair">
+                        <div class="w-10 h-10 rounded-2xl bg-zen-800 border border-white/5 flex items-center justify-center text-zen-100 mb-4 shadow-inner pointer-events-none">
+                            <i class="fa-solid fa-building-columns text-sm"></i>
+                        </div>
+                        <div class="pointer-events-none">
+                            <p class="text-3xl font-light text-zen-100 stat-counter" data-target="6">0</p>
+                            <p class="text-xs text-zen-400 uppercase tracking-widest mt-1">Statutory Bodies</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Table -->
+                <div class="glass-panel rounded-3xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-white/5 text-zen-400 text-[10px] uppercase tracking-widest">
+                                    <th class="p-5 font-medium">Entity</th>
+                                    <th class="p-5 font-medium">Classification</th>
+                                    <th class="p-5 font-medium">Designation</th>
+                                    <th class="p-5 font-medium hidden md:table-cell">Tenure Horizon</th>
+                                    <th class="p-5 font-medium hidden lg:table-cell">Jurisdiction</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/5 text-sm text-zen-400">
+                                <tr class="interactive-row hover:bg-white/[0.02] transition-colors group" onclick="toggleRow(this)">
+                                    <td class="p-5 font-medium text-zen-100 group-hover:text-zen-accent transition-colors flex items-center gap-2">
+                                        <i class="fa-solid fa-chevron-down text-[10px] expand-icon"></i>
+                                        Committee on Commerce
+                                    </td>
+                                    <td class="p-5"><span class="px-3 py-1 bg-zen-800 rounded-full text-xs border border-white/5">DRSC</span></td>
+                                    <td class="p-5">
+                                        <span class="px-3 py-1 bg-zen-accentDim text-zen-accent rounded-full text-xs font-semibold border border-zen-accent/20">
+                                            Chairperson
+                                        </span>
+                                    </td>
+                                    <td class="p-5 hidden md:table-cell">Sept 2027</td>
+                                    <td class="p-5 hidden lg:table-cell">Commerce & Industry</td>
+                                </tr>
+                                <tr class="row-details bg-white/[0.01]">
+                                    <td colspan="5" class="px-10 py-0 text-xs text-zen-500">
+                                        <div class="py-4 border-l-2 border-zen-accent/30 pl-4 my-2">
+                                            <strong>Key Objective:</strong> Examine policies, Demands for Grants, and legislation for MoCI. Upcoming focus on Q-Commerce duopolies.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="interactive-row hover:bg-white/[0.02] transition-colors group" onclick="toggleRow(this)">
+                                    <td class="p-5 font-medium text-zen-100 flex items-center gap-2">
+                                        <i class="fa-solid fa-chevron-down text-[10px] expand-icon"></i>
+                                        Viksit Bharat Shiksha Bill JPC
+                                    </td>
+                                    <td class="p-5"><span class="px-3 py-1 bg-zen-800 rounded-full text-xs border border-white/5">Ad-Hoc</span></td>
+                                    <td class="p-5">Member</td>
+                                    <td class="p-5 hidden md:table-cell">Upon Report</td>
+                                    <td class="p-5 hidden lg:table-cell">Higher Education</td>
+                                </tr>
+                                <tr class="row-details bg-white/[0.01]">
+                                    <td colspan="5" class="px-10 py-0 text-xs text-zen-500">
+                                        <div class="py-4 border-l-2 border-zen-800 pl-4 my-2">
+                                            <strong>Key Objective:</strong> Review the repeal of UGC/AICTE. Currently examining testimonies from central university Vice-Chancellors.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="interactive-row hover:bg-white/[0.02] transition-colors group" onclick="toggleRow(this)">
+                                    <td class="p-5 font-medium text-zen-100 flex items-center gap-2">
+                                        <i class="fa-solid fa-chevron-down text-[10px] expand-icon"></i>
+                                        Public Accounts (PAC)
+                                    </td>
+                                    <td class="p-5"><span class="px-3 py-1 bg-zen-800 rounded-full text-xs border border-white/5">Financial Joint</span></td>
+                                    <td class="p-5">Member</td>
+                                    <td class="p-5 hidden md:table-cell">April 2027</td>
+                                    <td class="p-5 hidden lg:table-cell">All Ministries (Audit)</td>
+                                </tr>
+                                <tr class="row-details bg-white/[0.01]">
+                                    <td colspan="5" class="px-10 py-0 text-xs text-zen-500">
+                                        <div class="py-4 border-l-2 border-zen-800 pl-4 my-2">
+                                            <strong>Key Objective:</strong> Apex audit oversight of CAG reports. Upcoming docket includes border roads and telecom spectrum audits.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="interactive-row hover:bg-white/[0.02] transition-colors group" onclick="toggleRow(this)">
+                                    <td class="p-5 font-medium text-zen-100 flex items-center gap-2">
+                                        <i class="fa-solid fa-chevron-down text-[10px] expand-icon"></i>
+                                        Committee on Defence
+                                    </td>
+                                    <td class="p-5"><span class="px-3 py-1 bg-zen-800 rounded-full text-xs border border-white/5">DRSC</span></td>
+                                    <td class="p-5">Member</td>
+                                    <td class="p-5 hidden md:table-cell">Sept 2027</td>
+                                    <td class="p-5 hidden lg:table-cell">Defence</td>
+                                </tr>
+                                <tr class="row-details bg-white/[0.01]">
+                                    <td colspan="5" class="px-10 py-0 text-xs text-zen-500">
+                                        <div class="py-4 border-l-2 border-zen-800 pl-4 my-2">
+                                            <strong>Key Objective:</strong> Modernization of Armed Forces, theatre command integration, and Atmanirbhar Bharat manufacturing push.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEEP DIVES TAB (Massively Expanded) -->
+            <div id="deep-dives" class="tab-content max-w-6xl mx-auto">
+                <div class="mb-10 mt-4">
+                    <h2 class="text-3xl font-semibold text-zen-100 mb-3 tracking-tight">Intelligence Deep Dives</h2>
+                    <p class="text-zen-400 text-sm max-w-2xl leading-relaxed">Comprehensive structural analysis, composition metrics, recent report summaries, and forward-looking operational predictions for primary committees.</p>
+                </div>
+
+                <div class="space-y-8">
+                    
+                    <!-- 1. COMMERCE -->
+                    <div class="glass-panel rounded-[2rem] overflow-hidden border border-white/5 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-zen-accent"></div>
+                        <div class="p-8">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-6 mb-6">
+                                <div>
+                                    <h3 class="text-2xl font-medium text-zen-100">Committee on Commerce</h3>
+                                    <p class="text-sm text-zen-500 mt-1 uppercase tracking-widest">DRSC • Administered by Rajya Sabha</p>
+                                </div>
+                                <span class="px-4 py-1.5 bg-zen-accentDim text-zen-accent text-sm font-semibold rounded-full border border-zen-accent/20">
+                                    Chairperson
+                                </span>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                <!-- Col 1: Analysis & Composition -->
+                                <div class="lg:col-span-1 space-y-6">
+                                    <div>
+                                        <h4 class="text-xs text-zen-500 uppercase tracking-widest mb-3">Structural Analysis</h4>
+                                        <p class="text-sm text-zen-400 leading-relaxed">
+                                            The committee scrutinizes Demands for Grants, Bills, and long-term policies of the Ministry of Commerce and Industry. Under Rules 268-277 of the RS, it possesses the mandate to summon industry bodies, review Foreign Direct Investment (FDI) frameworks, and evaluate international trade agreements.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-xs text-zen-500 uppercase tracking-widest mb-3">Projected Composition (2026-27)</h4>
+                                        <div class="bg-zen-900/50 rounded-2xl p-4 border border-white/5">
+                                            <div class="flex justify-between items-center mb-3 pb-2 border-b border-white/5 text-sm">
+                                                <span class="text-zen-100 font-medium">Total Strength</span>
+                                                <span class="text-zen-400">31 (21 LS, 10 RS)</span>
+                                            </div>
+                                            <ul class="text-sm space-y-2 text-zen-400">
+                                                <li class="flex items-center"><div class="w-1.5 h-1.5 rounded-full bg-zen-accent mr-2"></div><span class="text-zen-100">Dr. Sudhanshu Trivedi (Chair)</span></li>
+                                                <li class="flex items-center"><div class="w-1.5 h-1.5 rounded-full bg-zen-700 mr-2"></div>Dola Sen (TMC)</li>
+                                                <li class="flex items-center"><div class="w-1.5 h-1.5 rounded-full bg-zen-700 mr-2"></div>G.V.L. Narasimha Rao (BJP)</li>
+                                                <li class="flex items-center"><div class="w-1.5 h-1.5 rounded-full bg-zen-700 mr-2"></div>Priyanka Chaturvedi (SS-UBT)</li>
+                                            </ul>
+                                            <p class="text-[10px] text-zen-500 mt-3 italic">*Representative sampling of key members.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Col 2 & 3: Reports & Predictions -->
+                                <div class="lg:col-span-2 space-y-6">
+                                    <div>
+                                        <h4 class="text-xs text-zen-500 uppercase tracking-widest mb-3">Recent Reports Analysis</h4>
+                                        <div class="space-y-4">
+                                            <div class="bg-zen-900/50 p-4 rounded-2xl border border-white/5 hover:bg-zen-800/50 transition-colors">
+                                                <div class="flex justify-between items-start mb-2">
+                                                    <h5 class="text-sm font-medium text-zen-100">198th Report: Review of the SEZ Act & DESH Bill Framework</h5>
+                                                    <span class="text-[10px] text-zen-500 bg-zen-950 px-2 py-1 rounded">March 2026</span>
+                                                </div>
+                                                <p class="text-sm text-zen-400"><strong>Takeaway:</strong> Examined the sluggish transition of SEZs into domestic developmental hubs. Recommended aggressive tax equalization and integrated multi-modal logistics parks to revitalize manufacturing exports amid global slowdowns.</p>
+                                            </div>
+                                            <div class="bg-zen-900/50 p-4 rounded-2xl border border-white/5 hover:bg-zen-800/50 transition-colors">
+                                                <div class="flex justify-between items-start mb-2">
+                                                    <h5 class="text-sm font-medium text-zen-100">202nd Report: Strategic Mineral Supply Chains for Advanced Tech</h5>
+                                                    <span class="text-[10px] text-zen-500 bg-zen-950 px-2 py-1 rounded">August 2026</span>
+                                                </div>
+                                                <p class="text-sm text-zen-400"><strong>Takeaway:</strong> Assessed India's import vulnerabilities regarding lithium, cobalt, and rare earths essential for EV manufacturing. Strongly advised the immediate capitalization of a sovereign wealth fund to acquire overseas mines.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h4 class="text-xs text-zen-500 uppercase tracking-widest mb-3">Forward Agenda & Predictions</h4>
+                                        <div class="bg-gradient-to-r from-zen-900 to-zen-950 p-5 rounded-2xl border border-white/5">
+                                            <ul class="space-y-3 text-sm text-zen-300">
+                                                <li class="flex items-start">
+                                                    <i class="fa-solid fa-arrow-right text-zen-accent mt-1 mr-3 text-xs"></i>
+                                                    <span><strong>Q-Commerce Duopoly Scrutiny:</strong> Expect the committee under Dr. Trivedi to summon executives from major quick-commerce platforms regarding predatory pricing affecting traditional Kirana stores.</span>
+                                                </li>
+                                                <li class="flex items-start">
+                                                    <i class="fa-solid fa-arrow-right text-zen-accent mt-1 mr-3 text-xs"></i>
+                                                    <span><strong>PLI Scheme Audit:</strong> A comprehensive review of the Production Linked Incentive (PLI) scheme's actual employment generation metrics, specifically in electronics manufacturing.</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. JPC on EDUCATION -->
+                    <div class="glass-panel rounded-[2rem] overflow-hidden border border-white/5">
+                        <div class="p-8">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-6 mb-6">
+                                <div>
+                                    <h3 class="text-2xl font-medium text-zen-100">JPC on Viksit Bharat Shiksha Adhishthan Bill</h3>
+                                    <p class="text-sm text-zen-500 mt-1 uppercase tracking-widest">Ad-Hoc Joint Parliamentary Committee</p>
+                                </div>
+                                <span class="px-4 py-1.5 bg-zen-800 text-zen-300 text-sm font-semibold rounded-full border border-white/10">
+                                    Member
+                                </span>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <div class="space-y-6">
+                                    <div>
+                                        <h4 class="text-xs text-zen-500 uppercase tracking-widest mb-3">Structural Analysis & Composition</h4>
+                                        <p class="text-sm text-zen-400 leading-relaxed mb-4">
+                                            Formed in Dec 2025, this JPC is exclusively mandated to examine the bill intended to repeal the UGC, AICTE, and NCTE. It aims to create a unified apex higher education regulator, heavily impacting university autonomy.
+                                        </p>
+                                        <div class="bg-zen-900/50 rounded-2xl p-4 border border-white/5 text-sm text-zen-400">
+                                            <p class="mb-2"><strong class="text-zen-100">Chairperson:</strong> Daggubati Purandeswari (BJP)</p>
+                                            <p><strong class="text-zen-100">Total Strength:</strong> 30 Members (Joint Houses)</p>
+                                            <p class="mt-2 text-[11px] text-zen-500">Dr. Trivedi was inducted in Feb 2026 due to his academic background (Ph.D. Engineering) to provide technical framing for STEM accreditation.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-6">
+                                    <div>
+                                        <h4 class="text-xs text-zen-500 uppercase tracking-widest mb-3">Status & Predictive Outlook</h4>
+                                        <div class="bg-zen-900/50 p-5 rounded-2xl border border-white/5 space-y-4">
+                                            <p class="text-sm text-zen-400">
+                                                <strong>Current Phase:</strong> Transitioned into "Clause-by-Clause Consideration" as of late October 2026. Following extensive testimonies from Central and State University VCs in Q2/Q3, the committee is currently heavily deliberating Chapter IV (State Regulatory Exemptions).
+                                            </p>
+                                            <div class="border-t border-white/5 pt-4">
+                                                <strong class="text-sm text-zen-100 block mb-2">Predictions for Next Draft:</strong>
+                                                <ul class="text-sm text-zen-400 space-y-2 list-disc pl-4 marker:text-zen-700">
+                                                    <li>Dilution of the clause allowing the center to unilaterally appoint State University oversight panels, favoring a concurrent approach.</li>
+                                                    <li>Introduction of a separate sub-regulatory tier exclusively for deep-tech (AI/Quantum/Semiconductor) institutes to bypass standard accreditation lags.</li>
+                                                    <li>Final report expected to be tabled in the Winter Session (Dec 2026).</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. PUBLIC ACCOUNTS -->
+                    <div class="glass-panel rounded-[2rem] overflow-hidden border border-white/5">
+                        <div class="p-8">
+                            <div class="flex items-center justify-between border-b border-white/5 pb-6 mb-6">
+                                <div>
+                                    <h3 class="text-2xl font-medium text-zen-100">Public Accounts Committee (PAC)</h3>
+                                    <p class="text-sm text-zen-500 mt-1 uppercase tracking-widest">Financial • Joint Houses • Elected Members</p>
+                                </div>
+                                <span class="px-4 py-1.5 bg-zen-800 text-zen-300 text-sm font-semibold rounded-full border border-white/10">
+                                    Member
+                                </span>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <div class="space-y-6">
+                                    <div>
+                                        <h4 class="text-xs text-zen-500 uppercase tracking-widest mb-3">Structural Analysis & Composition</h4>
+                                        <p class="text-sm text-zen-400 leading-relaxed mb-4">
+                                            The apex audit committee. Governed by Rule 308 (LS), it scrutinizes government appropriation accounts and CAG reports. Crucially, RS members are elected annually via single transferable vote, not nominated.
+                                        </p>
+                                        <div class="bg-zen-900/50 rounded-2xl p-4 border border-white/5 text-sm text-zen-400">
+                                            <p class="mb-2"><strong class="text-zen-100">Chairperson:</strong> K.C. Venugopal (INC - Opposition Chair Tradition)</p>
+                                            <p><strong class="text-zen-100">Strength:</strong> 22 (15 LS, 7 RS)</p>
+                                            <p class="mt-2 text-[11px] text-zen-500">Role: Dr. Trivedi acts as a primary ruling-party defense anchor during hostile audits.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-6">
+                                    <div>
+                                        <h4 class="text-xs text-zen-500 uppercase tracking-widest mb-3">Recent Audits & Predictions</h4>
+                                        <div class="bg-zen-900/50 p-5 rounded-2xl border border-white/5 space-y-4">
+                                            <p class="text-sm text-zen-400">
+                                                <strong>Recent Scrutiny (126th Report - Aug 2026):</strong> Investigated the CAG Performance Audit on Border Roads Organization (BRO Phase III). The PAC rigorously questioned MoD officials over strategic tunneling delays in the Arunachal sector and sanctioned sweeping protocols for expedited ecological clearances.
+                                            </p>
+                                            <div class="border-t border-white/5 pt-4">
+                                                <strong class="text-sm text-zen-100 block mb-2">Upcoming Docket (Predicted):</strong>
+                                                <ul class="text-sm text-zen-400 space-y-2 list-disc pl-4 marker:text-zen-700">
+                                                    <li>Reviewing the upcoming CAG audit on Highway Toll Collection Mechanisms (NHAI).</li>
+                                                    <li>Examination of Telecom Spectrum Allocation procedures for initial 6G testbeds (FY25-26 compliance).</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ANALYSIS TAB -->
+            <div id="analysis" class="tab-content max-w-5xl mx-auto">
+                <div class="mb-10 mt-4">
+                    <h2 class="text-3xl font-semibold text-zen-100 mb-3 tracking-tight">Cross-Cutting Strategic Analysis</h2>
+                    <p class="text-zen-400 text-sm max-w-2xl leading-relaxed">Evaluation of thematic overlap, political positioning, and workload bandwidth.</p>
+                </div>
+                
+                <div class="space-y-6">
+                    <div class="glass-panel p-8 rounded-[2rem] hover:bg-white/[0.02] transition-colors hover:scale-[1.01] duration-300">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-zen-900 border border-white/10 flex items-center justify-center text-zen-100 shadow-inner">
+                                <i class="fa-solid fa-network-wired"></i>
+                            </div>
+                            <h3 class="text-xl font-medium text-zen-100 tracking-wide">Strategic Axis: Security & Trade</h3>
+                        </div>
+                        <p class="text-sm text-zen-400 leading-relaxed pl-16">
+                            Dr. Trivedi’s concurrent placement on the Defence DRSC and Chairmanship of the Commerce DRSC forms a powerful "geoeconomic axis." It allows him cross-visibility into how border security needs and domestic manufacturing capacities dictate trade tariffs and FDI stances finalized in Commerce. As the Senior National Spokesperson, this dual portfolio provides him with highly classified, holistic context to defend the government's grand strategy publicly.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-[2rem] hover:bg-white/[0.02] transition-colors hover:scale-[1.01] duration-300">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-zen-900 border border-white/10 flex items-center justify-center text-zen-100 shadow-inner">
+                                <i class="fa-solid fa-network-wired"></i>
+                            </div>
+                            <h3 class="text-xl font-medium text-zen-100 tracking-wide">The Triad of Influence: Security, Trade, Diplomacy</h3>
+                        </div>
+                        <p class="text-sm text-zen-400 leading-relaxed pl-16">
+                            Dr. Trivedi’s concurrent placement on the Defence DRSC, External Affairs DRSC, and Chairmanship of the Commerce DRSC is structurally rare. This forms a powerful "geoeconomic triad." It allows him cross-visibility into how border security needs dictate foreign policy, which in turn influences trade tariffs and FDI stances finalized in Commerce. As the Senior National Spokesperson, this triad provides him with highly classified, holistic context to defend the government's grand strategy publicly.
+                        </p>
+                    </div>
+
+                    <div class="glass-panel p-8 rounded-[2rem] hover:bg-white/[0.02] transition-colors">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-zen-900 border border-white/10 flex items-center justify-center text-zen-100 shadow-inner">
+                                <i class="fa-solid fa-microchip"></i>
+                            </div>
+                            <h3 class="text-xl font-medium text-zen-100 tracking-wide">Academic Leveraging: The Education Bloc</h3>
+                        </div>
+                        <p class="text-sm text-zen-400 leading-relaxed pl-16">
+                            Holding a Ph.D. in Mechanical Engineering, his deployment to the JPC on the Viksit Bharat Shiksha Bill, the Consultative Committee for Education, and the JNU Court is a deliberate optimization of domain expertise. He is positioned as the legislative architect for the ruling party's transition of higher education toward technical/STEM-heavy, autonomous frameworks.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAST SERVICE TAB -->
+            <div id="past-service" class="tab-content max-w-5xl mx-auto">
+                <div class="mb-10 mt-4">
+                    <h2 class="text-3xl font-semibold text-zen-100 mb-3 tracking-tight">Historical Context & Legislative Impact (Term I)</h2>
+                    <p class="text-zen-400 text-sm max-w-2xl leading-relaxed">A deep-dive into crucial deployments during the 2019-2024 tenure that forged Dr. Trivedi's current regulatory expertise and standing assignments.</p>
+                </div>
+
+                <div class="relative border-l border-white/10 ml-6 space-y-12 pb-10">
+                    
+                    <div class="relative pl-10">
+                        <div class="absolute w-3 h-3 rounded-full bg-zen-accent left-[-6.5px] top-2 shadow-[0_0_10px_rgba(56,189,248,0.8)]"></div>
+                        <div class="glass-panel p-6 rounded-3xl hover:bg-white/[0.02] transition-colors">
+                            <h4 class="text-lg font-medium text-zen-100">JPC on Personal Data Protection Bill, 2019</h4>
+                            <span class="text-xs text-zen-500 uppercase tracking-widest block mb-3 mt-1">Aug 2021 – Dec 2021</span>
+                            <p class="text-sm text-zen-400 leading-relaxed mb-4">
+                                Served on the highly consequential Joint Parliamentary Committee that comprehensively overhauled India's initial digital privacy framework. Dr. Trivedi was instrumental during the contentious debates surrounding Section 35 (Exemptions for State Agencies), strongly advocating for national security carve-outs.
+                            </p>
+                            <div class="bg-zen-900/50 p-4 rounded-2xl border border-white/5 text-sm text-zen-400">
+                                <strong class="text-zen-100 block mb-1">Legislative Legacy:</strong>
+                                His push for strict data localization requirements and hardware sovereignty within the committee laid the conceptual groundwork for the eventual, leaner Digital Personal Data Protection (DPDP) Act of 2023. This foundational experience directly catalyzed his elevation to the Commerce Committee Chairmanship in 2026, as data flow is increasingly treated as a critical trade commodity.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative pl-10">
+                        <div class="absolute w-3 h-3 rounded-full bg-zen-700 left-[-6.5px] top-2"></div>
+                        <div class="glass-panel p-6 rounded-3xl hover:bg-white/[0.02] transition-colors">
+                            <h4 class="text-lg font-medium text-zen-100">Committee on Energy</h4>
+                            <span class="text-xs text-zen-500 uppercase tracking-widest block mb-3 mt-1">July 2020 – April 2024</span>
+                            <p class="text-sm text-zen-400 leading-relaxed mb-4">
+                                Engaged in multi-year oversight of India's ambitious transition toward 500 GW of non-fossil fuel capacity. Dr. Trivedi actively participated in site visits to ultra-mega solar parks and nuclear facilities.
+                            </p>
+                            <ul class="text-sm text-zen-400 space-y-2 list-disc pl-4 marker:text-zen-700">
+                                <li><strong>Flagship Contribution:</strong> Co-authored the critical report on the "Financial Health of State DISCOMs," pressing for the Revamped Distribution Sector Scheme (RDSS) and the enforcement of smart-metering targets to curb AT&C losses.</li>
+                                <li><strong>Policy Stance:</strong> Consistently advocated for grid stabilization technologies and hydrogen mission funding during Demands for Grants deliberations.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="relative pl-10">
+                        <div class="absolute w-3 h-3 rounded-full bg-zen-700 left-[-6.5px] top-2"></div>
+                        <div class="glass-panel p-6 rounded-3xl hover:bg-white/[0.02] transition-colors">
+                            <h4 class="text-lg font-medium text-zen-100">Committee on Papers Laid on the Table (Rajya Sabha)</h4>
+                            <span class="text-xs text-zen-500 uppercase tracking-widest block mb-3 mt-1">Nov 2022 – April 2024</span>
+                            <p class="text-sm text-zen-400 leading-relaxed">
+                                A specialized procedural committee ensuring executive accountability. Dr. Trivedi's tenure focused on reprimanding ministries for chronic delays in framing subordinate legislation (rules and regulations) after a parent Act was passed by Parliament. His scrutiny improved compliance rates for tabling annual reports of PSUs and central universities, sharpening his procedural mastery of the Upper House.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- SCHEDULE TAB -->
+            <div id="schedule" class="tab-content max-w-6xl mx-auto">
+                <div class="mb-8 mt-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                    <div>
+                        <h2 class="text-3xl font-semibold text-zen-100 mb-3 tracking-tight">Live Meeting Schedule</h2>
+                        <p class="text-zen-400 text-sm max-w-2xl leading-relaxed">Chronological tracker of historical sittings and upcoming scheduled meetings across all active committee deployments.</p>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-zen-900/50 border border-white/10 px-3 py-1.5 rounded-full text-xs text-zen-400 self-start md:self-auto">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
+                        <span>API Sync: Active (Mocked for Vercel Demo)</span>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="glass-panel p-2 rounded-2xl flex flex-wrap gap-2 mb-8 border border-white/5" id="schedule-filters">
+                    <button class="filter-btn active px-4 py-2 rounded-xl text-sm font-medium transition-all bg-white/10 text-zen-100" data-filter="all">All Committees</button>
+                    <button class="filter-btn px-4 py-2 rounded-xl text-sm font-medium transition-all text-zen-400 hover:bg-white/5" data-filter="Commerce">Commerce</button>
+                    <button class="filter-btn px-4 py-2 rounded-xl text-sm font-medium transition-all text-zen-400 hover:bg-white/5" data-filter="PAC">Public Accounts</button>
+                    <button class="filter-btn px-4 py-2 rounded-xl text-sm font-medium transition-all text-zen-400 hover:bg-white/5" data-filter="JPC">JPC (Education)</button>
+                    <button class="filter-btn px-4 py-2 rounded-xl text-sm font-medium transition-all text-zen-400 hover:bg-white/5" data-filter="Defence">Defence</button>
+                </div>
+
+                <!-- Timeline Container -->
+                <div class="relative border-l border-white/10 ml-4 md:ml-6 space-y-6 pb-10" id="timeline-container">
+                    <!-- Javascript will populate this -->
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Smooth Tab Switching Logic
+        function showTab(tabId, element) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Show selected tab (triggers CSS animation)
+            document.getElementById(tabId).classList.add('active');
+            
+            // Update nav link styles (Zen minimal active state)
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('bg-white/10', 'text-zen-100');
+                link.classList.add('text-zen-400');
+                // reset icons
+                const icon = link.querySelector('i');
+                if(icon) icon.classList.remove('text-zen-accent');
+            });
+            
+            element.classList.remove('text-zen-400');
+            element.classList.add('bg-white/10', 'text-zen-100');
+            const activeIcon = element.querySelector('i');
+            if(activeIcon) activeIcon.classList.add('text-zen-accent');
+
+            // Close mobile sidebar if open
+            if(window.innerWidth < 1024) {
+                toggleSidebar();
+            }
+        }
+
+        // Mobile sidebar toggle with smooth transitions
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            
+            if (sidebar.classList.contains('-translate-x-[120%]')) {
+                sidebar.classList.remove('-translate-x-[120%]');
+                overlay.classList.remove('hidden');
+                // small delay to allow display:block to apply before opacity fade
+                setTimeout(() => {
+                    overlay.classList.add('opacity-100');
+                }, 10);
+            } else {
+                sidebar.classList.add('-translate-x-[120%]');
+                overlay.classList.remove('opacity-100');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300); // match transition duration
+            }
+        }
+
+        // --- NEW INTERACTIVE ELEMENTS ---
+
+        // Expandable Table Rows
+        function toggleRow(element) {
+            // Close other rows to keep it clean (accordion behavior)
+            document.querySelectorAll('.interactive-row').forEach(row => {
+                if (row !== element) row.classList.remove('expanded');
+            });
+            element.classList.toggle('expanded');
+        }
+
+        // 3D Tilt Effect on Stat Cards
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        tiltCards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -10; // Max rotation 10deg
+                const rotateY = ((x - centerX) / centerX) * 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+                card.style.transition = 'transform 0.5s ease-out';
+            });
+            
+            card.addEventListener('mouseenter', () => {
+                card.style.transition = 'transform 0.1s ease-out';
+            });
+        });
+
+        // Number Animation for Stats
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-counter');
+            counters.forEach(counter => {
+                counter.innerText = '0';
+                const target = +counter.getAttribute('data-target');
+                const duration = 1500; // ms
+                const increment = target / (duration / 16); // 60fps
+                
+                const updateCounter = () => {
+                    const current = +counter.innerText;
+                    if (current < target) {
+                        counter.innerText = Math.ceil(current + increment);
+                        setTimeout(updateCounter, 16);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCounter();
+            });
+        }
+        
+        // Run counter animation on load
+        window.addEventListener('DOMContentLoaded', animateCounters);
+
+        // --- SCHEDULE DATA & RENDERING ---
+        
+        const meetingsData = [
+            // Upcoming
+            { id: 1, committee: "Commerce", type: "DRSC", status: "Upcoming", date: "Nov 22, 2026", time: "11:00 AM", location: "Main Committee Room, PHA", agenda: "Oral evidence of representatives of the Ministry of Commerce and Industry regarding 'Impact of Quick-Commerce on Traditional Retail'.", role: "Chairperson" },
+            { id: 2, committee: "JPC", type: "Ad-Hoc", status: "Upcoming", date: "Nov 25, 2026", time: "15:00 PM", location: "Room 62, Parliament House", agenda: "Clause-by-Clause consideration of Chapter IV (State Regulatory Exemptions) of the Viksit Bharat Shiksha Adhishthan Bill, 2025.", role: "Member" },
+            { id: 3, committee: "PAC", type: "Financial", status: "Upcoming", date: "Dec 05, 2026", time: "11:30 AM", location: "Room 53, Parliament House", agenda: "Examination of C&AG Report on Telecom Spectrum Allocation for 6G Testbeds (FY 2025-26).", role: "Member" },
+            { id: 4, committee: "Commerce", type: "DRSC", status: "Upcoming", date: "Dec 12, 2026", time: "11:00 AM", location: "Main Committee Room, PHA", agenda: "Consideration and adoption of Draft Report on 'Performance of PLI Scheme in Electronics Manufacturing'.", role: "Chairperson" },
+            // Historical (Since late 2025 / 2026 Reconstitution)
+            { id: 5, committee: "JPC", type: "Ad-Hoc", status: "Completed", date: "Oct 28, 2026", time: "14:00 PM", location: "Room 62, Parliament House", agenda: "Hearing testimonies from Vice-Chancellors of State Universities regarding integration pathways.", role: "Member" },
+            { id: 6, committee: "Commerce", type: "DRSC", status: "Completed", date: "Oct 15, 2026", time: "11:00 AM", location: "Room 63, PHA", agenda: "First meeting post-reconstitution. Internal discussion on selecting subjects for examination for the year 2026-2027.", role: "Chairperson (Newly Appointed)" },
+            { id: 7, committee: "Defence", type: "DRSC", status: "Completed", date: "Sep 30, 2026", time: "11:00 AM", location: "Room 138, PHA", agenda: "Briefing by Ministry of Defence on the status of Theatre Command Integration.", role: "Member" },
+            { id: 8, committee: "PAC", type: "Financial", status: "Completed", date: "Aug 20, 2026", time: "15:00 PM", location: "Room 53, Parliament House", agenda: "Oral evidence of Ministry of Defence (BRO) on C&AG Performance Audit on Border Roads Organization Phase III.", role: "Member" },
+            { id: 9, committee: "Commerce", type: "DRSC", status: "Completed", date: "Aug 05, 2026", time: "11:00 AM", location: "Room 63, PHA", agenda: "Adoption of 202nd Report on 'Strategic Mineral Supply Chains for Advanced Tech'.", role: "Member (Pre-Chairmanship)" },
+            { id: 10, committee: "JPC", type: "Ad-Hoc", status: "Completed", date: "Jul 18, 2026", time: "14:30 PM", location: "Room 62, Parliament House", agenda: "Evidence from the Secretary, Department of Higher Education and Chairman, UGC.", role: "Member" },
+            { id: 11, committee: "PAC", type: "Financial", status: "Completed", date: "Jun 10, 2026", time: "11:00 AM", location: "Room 53, Parliament House", agenda: "Review of FRBM Act compliance and debt-to-GDP trajectory for FY25.", role: "Member" },
+            { id: 12, committee: "Defence", type: "DRSC", status: "Completed", date: "May 22, 2026", time: "15:00 PM", location: "Room 138, PHA", agenda: "Examination of Demands for Grants (2026-27) for the Ministry of Defence.", role: "Member" },
+            { id: 13, committee: "Commerce", type: "DRSC", status: "Completed", date: "Mar 10, 2026", time: "11:00 AM", location: "Room 63, PHA", agenda: "Consideration and adoption of 198th Report on 'Review of the SEZ Act & DESH Bill Framework'.", role: "Member" },
+            { id: 14, committee: "JPC", type: "Ad-Hoc", status: "Completed", date: "Feb 15, 2026", time: "10:30 AM", location: "Main Committee Room, PHA", agenda: "Inaugural meeting of the JPC. Introductory briefing by the Ministry of Education on the Viksit Bharat Shiksha Adhishthan Bill, 2025.", role: "Member (Newly Inducted)" }
+        ];
+
+        function renderTimeline(filter = 'all') {
+            const container = document.getElementById('timeline-container');
+            container.innerHTML = ''; // Clear current
+
+            const filteredMeetings = meetingsData.filter(m => filter === 'all' || m.committee === filter);
+
+            if (filteredMeetings.length === 0) {
+                container.innerHTML = '<div class="pl-10 text-zen-500 text-sm italic py-4">No meetings found for this selection.</div>';
+                return;
+            }
+
+            filteredMeetings.forEach(meeting => {
+                const isUpcoming = meeting.status === 'Upcoming';
+                const dotColor = isUpcoming ? 'bg-zen-accent shadow-[0_0_8px_rgba(56,189,248,0.6)]' : 'bg-zen-700';
+                const cardBorder = isUpcoming ? 'border-zen-accent/30 bg-zen-900/80' : 'border-white/5 bg-zen-900/40 hover:bg-white/[0.02]';
+                const textHighlight = isUpcoming ? 'text-zen-100' : 'text-zen-300';
+                
+                const html = `
+                    <div class="relative pl-6 md:pl-10 group">
+                        <div class="absolute w-3 h-3 rounded-full ${dotColor} left-[-6.5px] top-6 transition-all duration-300"></div>
+                        <div class="glass-panel p-5 md:p-6 rounded-3xl border ${cardBorder} transition-colors flex flex-col md:flex-row md:items-start gap-4">
+                            <!-- Date & Time Column -->
+                            <div class="min-w-[120px] shrink-0 pt-1">
+                                <div class="text-sm font-semibold ${textHighlight}">${meeting.date}</div>
+                                <div class="text-xs text-zen-500 mt-1 flex items-center gap-1.5">
+                                    <i class="fa-regular fa-clock"></i> ${meeting.time}
+                                </div>
+                                <div class="mt-3 inline-block px-2.5 py-1 rounded text-[10px] uppercase tracking-wider font-medium ${isUpcoming ? 'bg-zen-accent/20 text-zen-accent' : 'bg-zen-800 text-zen-400'}">
+                                    ${meeting.status}
+                                </div>
+                            </div>
+                            
+                            <!-- Content Column -->
+                            <div class="flex-1">
+                                <div class="flex flex-wrap items-center gap-2 mb-2">
+                                    <h4 class="text-base md:text-lg font-medium ${textHighlight}">${meeting.committee} Committee</h4>
+                                    <span class="px-2 py-0.5 border border-white/10 rounded-full text-[10px] text-zen-500 bg-white/5">${meeting.type}</span>
+                                </div>
+                                <p class="text-sm text-zen-400 leading-relaxed mb-3">
+                                    ${meeting.agenda}
+                                </p>
+                                <div class="flex flex-wrap items-center justify-between gap-3 text-xs border-t border-white/5 pt-3">
+                                    <span class="text-zen-500 flex items-center gap-1.5"><i class="fa-solid fa-location-dot"></i> ${meeting.location}</span>
+                                    <span class="text-zen-400 font-medium bg-black/20 px-2 py-1 rounded">Role: ${meeting.role}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        // Filter Logic
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                // Update active state
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active', 'bg-white/10', 'text-zen-100');
+                    b.classList.add('text-zen-400');
+                });
+                const targetBtn = e.target;
+                targetBtn.classList.remove('text-zen-400');
+                targetBtn.classList.add('active', 'bg-white/10', 'text-zen-100');
+
+                // Render
+                const filter = targetBtn.getAttribute('data-filter');
+                renderTimeline(filter);
+            });
+        });
+
+        // Initial render for timeline
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTimeline('all');
+        });
+    </script>
+</body>
+</html>
